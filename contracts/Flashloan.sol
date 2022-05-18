@@ -5,6 +5,9 @@ pragma abicoder v2;
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@aave/core-v3/contracts/flashloan/base/FlashLoanReceiverBase.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+//
+// need the Aave loan library
+// ILendingPool, IProtocolDataProvider, IStableDebtToken  for interfaces
 
 import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import "@uniswap/lib/contracts/libraries/TransferHelper.sol";
@@ -23,6 +26,11 @@ contract FlashLoanExample is FlashLoanReceiverBase, Withdraw {
   address public constant WETH = 0xb18d016cDD2d9439A19f15633005A6b2cd6Aa774; // <<< REALLY USDC
 
   ISwapRouter public immutable swapRouter = ISwapRouter(SWAP_ROUTER);
+
+  //Aave Interface tools
+  //ILendingPool constant lendingPool = ILendingPool(address(0x9FE532197ad76c5a68961439604C037EB79681F0)); // Kovan
+  //IProtocolDataProvider constant dataProvider = IProtocolDataProvider(address(0x744C1aaA95232EeF8A9994C4E0b3a89659D9AB79)); // Kovan
+
 
   uint256 public swappedAmount;
 
@@ -96,12 +104,19 @@ contract FlashLoanExample is FlashLoanReceiverBase, Withdraw {
   ) external returns (bool){
     // do things like arbitrage here
     // abi.decode(params) to decode params
-    //UNISWAP STUFF
+    
+    //Deposit the loaned assets
+    //aave function to deposit
 
+    //aave function to borrow new asset
+
+    //UNISWAP STUFF
     //swap Dai to usdc
     swapExactInputSingle(amounts[0]);
     //Swap USDC to Dai
- //   swapExactInputSingleOut(amounts[0]);  // current error
+    swapExactInputSingleOut(IERC20(WETH).balanceOf(address(this)));  // current error
+
+  
 
     //
   
