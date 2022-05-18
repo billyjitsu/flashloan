@@ -8,8 +8,9 @@ const DAI_WHALE = "0xD92B63D0E9F2CE9F77c32BfeB2C6fACd20989eB3";
 
 // Mainnet Pool contract address
 
-const POOL_ADDRESS_PROVIDER = "0xa97684ead0e402dc232d5a977953df7ecbab3cdb"; //polygon mainnet
+//const POOL_ADDRESS_PROVIDER = "0xa97684ead0e402dc232d5a977953df7ecbab3cdb"; //polygon mainnet
 //const POOL_ADDRESS_PROVIDER = "0x5343b5bA672Ae99d627A1C87866b8E53F47Db2E6"; //mumbai
+const POOL_ADDRESS_PROVIDER = '0xBA6378f1c1D046e9EB0F538560BA7558546edF3C'; //  rinkeby
 module.exports = {
   DAI,
   DAI_WHALE,

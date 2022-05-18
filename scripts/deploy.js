@@ -3,7 +3,7 @@ const hre = require("hardhat");
 async function main() {
  
   const Flash = await hre.ethers.getContractFactory("FlashLoanExample");
-  const flash = await Flash.deploy("0x5343b5bA672Ae99d627A1C87866b8E53F47Db2E6"); //pool addres provider mumbai
+  const flash = await Flash.deploy("0xBA6378f1c1D046e9EB0F538560BA7558546edF3C"); //pool addres provider rinkeby
 
   await flash.deployed();
 
