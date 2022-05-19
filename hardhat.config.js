@@ -1,7 +1,6 @@
 require("@nomiclabs/hardhat-waffle");
-require('dotenv').config()
+require("dotenv").config();
 require("@nomiclabs/hardhat-etherscan");
-
 
 module.exports = {
   solidity: {
@@ -14,17 +13,16 @@ module.exports = {
             runs: 200,
           },
         },
-      }
+      },
     ],
   },
-
+  // defaultNetwork,
   networks: {
-    
     hardhat: {
       chainId: 31337,
-      forking: {
-        url: process.env.ALCHEMY_API_KEY_URL,
-      },
+      // forking: {
+      //   url: process.env.ALCHEMY_API_KEY_URL,
+      // },
     },
 
     rinkeby: {
@@ -50,12 +48,11 @@ module.exports = {
       gas: 200000000,
       gasPrice: 100000000000,
       saveDeployments: true,
-    }
-
- },
- etherscan: {
-  // Your API key for Etherscan
-  // Obtain one at https://etherscan.io/
-  apiKey: process.env.ETHERSCAN_API_KEY
-}
+    },
+  },
+  etherscan: {
+    // Your API key for Etherscan
+    // Obtain one at https://etherscan.io/
+    apiKey: process.env.ETHERSCAN_API_KEY,
+  },
 };
