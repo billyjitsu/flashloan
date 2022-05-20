@@ -11,7 +11,9 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import "@uniswap/lib/contracts/libraries/TransferHelper.sol";
+
 import "./Withdraw.sol";
+
 
 
 contract FlashLoanExample is FlashLoanReceiverBase, Withdraw {
@@ -70,7 +72,7 @@ contract FlashLoanExample is FlashLoanReceiverBase, Withdraw {
       amountOut = swapRouter.exactInputSingle(params);
       swappedAmount = amountOut;
   }
-
+/*
   // create a 2ndary function for swapping assets,  need to creat a universal function
   function swapExactInputSingleOut(uint256 amountIn)
       public                   //used to be external
@@ -90,6 +92,7 @@ contract FlashLoanExample is FlashLoanReceiverBase, Withdraw {
           });
       amountOut = swapRouter.exactInputSingle(params);
   }
+  */
 
   
 
@@ -114,7 +117,7 @@ contract FlashLoanExample is FlashLoanReceiverBase, Withdraw {
     //swap Dai to usdc
     swapExactInputSingle(amounts[0]);
     //Swap USDC to Dai
-    swapExactInputSingleOut(IERC20(WETH).balanceOf(address(this)));  // current error
+  //  swapExactInputSingleOut(IERC20(WETH).balanceOf(address(this)));  // current error
 
   
 
