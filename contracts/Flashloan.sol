@@ -12,6 +12,11 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import "@uniswap/lib/contracts/libraries/TransferHelper.sol";
 
+//Aave Deposit /Withdraw pools
+import "@aave/core-v3/contracts/interfaces/IPool.sol";
+import "@aave/core-v3/contracts/interfaces/IPoolAddressesProvider.sol";
+import "@aave/core-v3/contracts/interfaces/IPoolAddressesProviderRegistry.sol";
+
 import "./Withdraw.sol";
 
 
@@ -30,9 +35,10 @@ contract FlashLoanExample is FlashLoanReceiverBase, Withdraw {
   ISwapRouter public immutable swapRouter = ISwapRouter(SWAP_ROUTER);
 
   //Aave Interface tools
-  //ILendingPool constant lendingPool = ILendingPool(address(0x9FE532197ad76c5a68961439604C037EB79681F0)); // Kovan
-  //IProtocolDataProvider constant dataProvider = IProtocolDataProvider(address(0x744C1aaA95232EeF8A9994C4E0b3a89659D9AB79)); // Kovan
-
+  IPool constant ipool = IPool(0x87530ED4bd0ee0e79661D65f8Dd37538F693afD5);  // rinkeby pool addres provi 0xBA6378f1c1D046e9EB0F538560BA7558546edF3C
+  IPoolAddressesProviderRegistry public poolAddressesProviderRegistry = IPoolAddressesProviderRegistry(0xF2038a65f68a94d1CFD0166f087A795341e2eac8);
+  uint256 private constant ADDRESSES_PROVIDER_ID = uint256(0);
+ // --
 
   uint256 public swappedAmount;
 
@@ -72,7 +78,7 @@ contract FlashLoanExample is FlashLoanReceiverBase, Withdraw {
       amountOut = swapRouter.exactInputSingle(params);
       swappedAmount = amountOut;
   }
-/*
+
   // create a 2ndary function for swapping assets,  need to creat a universal function
   function swapExactInputSingleOut(uint256 amountIn)
       public                   //used to be external
@@ -92,7 +98,7 @@ contract FlashLoanExample is FlashLoanReceiverBase, Withdraw {
           });
       amountOut = swapRouter.exactInputSingle(params);
   }
-  */
+  
 
   
 
@@ -110,8 +116,10 @@ contract FlashLoanExample is FlashLoanReceiverBase, Withdraw {
     
     //Deposit the loaned assets
     //aave function to deposit
+    depositCollateral(assets[0], amounts[0]);
 
     //aave function to borrow new asset
+    withdrawCollateral(assets[0], amounts[0]);
 
     //UNISWAP STUFF
     //swap Dai to usdc
@@ -154,5 +162,41 @@ contract FlashLoanExample is FlashLoanReceiverBase, Withdraw {
         referralCode
       );
   }
+
+  //Aave Functions -
+   function depositCollateral(address asset, uint256 amount) public {
+        IERC20(asset).approve(address(_pool()), amount);
+        _pool().deposit(asset, amount, address(this), 0);
+    }
+
+    function withdrawCollateral(address asset, uint256 amount) public {
+        _pool().withdraw(asset, amount, address(this));
+    }
+
+    function borrowCollateral(address asset, uint256 amount) public {
+        IERC20(asset).approve(address(_pool()), amount);
+        _pool().borrow(asset, amount, 0, 0, address(this));
+    }
+
+    function repayCollateral(address asset, uint256 amount) public {
+        _pool().repay(asset, amount, 0, address(this));
+    }
+
+    function _poolProvider() internal view returns (IPoolAddressesProvider) {
+    return
+      IPoolAddressesProvider(
+        poolAddressesProviderRegistry.getAddressesProvidersList()[ADDRESSES_PROVIDER_ID]
+      );
+  }
+
+  /**
+   * @notice Retrieves Aave Pool address.
+   * @return A reference to Pool interface.
+   */
+  function _pool() internal view returns (IPool) {
+    return IPool(_poolProvider().getPool());
+  }
+
+  //
    
 }
