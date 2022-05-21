@@ -31,11 +31,11 @@ contract Deposit {                       //Pool implementation 0x87530ED4bd0ee0e
 
     function borrowCollateral(address asset, uint256 amount) public {
         IERC20(asset).approve(address(_pool()), amount);
-        _pool().borrow(asset, amount, 0, 0, address(this));
+        _pool().borrow(asset, amount, 2, 0, address(this));
     }
 
     function repayCollateral(address asset, uint256 amount) public {
-        _pool().repay(asset, amount, 0, address(this));
+        _pool().repay(asset, amount, 2, address(this));
     }
 
     function _poolProvider() internal view returns (IPoolAddressesProvider) {

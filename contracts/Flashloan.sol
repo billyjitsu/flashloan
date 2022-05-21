@@ -119,6 +119,8 @@ contract FlashLoanExample is FlashLoanReceiverBase, Withdraw {
     depositCollateral(assets[0], amounts[0]);
 
     //aave function to borrow new asset
+   // borrowCollateral(WETH, amounts[0]/2);
+   // repayCollateral(WETH, amounts[0]/2);
     withdrawCollateral(assets[0], amounts[0]);
 
     //UNISWAP STUFF
@@ -175,11 +177,11 @@ contract FlashLoanExample is FlashLoanReceiverBase, Withdraw {
 
     function borrowCollateral(address asset, uint256 amount) public {
         IERC20(asset).approve(address(_pool()), amount);
-        _pool().borrow(asset, amount, 0, 0, address(this));
+        _pool().borrow(asset, amount, 2, 0, address(this)); //on single tx Interest is 2
     }
 
     function repayCollateral(address asset, uint256 amount) public {
-        _pool().repay(asset, amount, 0, address(this));
+        _pool().repay(asset, amount, 2, address(this));  //on single tx Interest is 2
     }
 
     function _poolProvider() internal view returns (IPoolAddressesProvider) {
