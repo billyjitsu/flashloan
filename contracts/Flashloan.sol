@@ -7,7 +7,7 @@ import "@aave/core-v3/contracts/flashloan/base/FlashLoanReceiverBase.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 //
 // need the Aave loan library
-// ILendingPool, IProtocolDataProvider, IStableDebtToken  for interfaces
+
 
 import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import "@uniswap/lib/contracts/libraries/TransferHelper.sol";
@@ -66,7 +66,7 @@ contract FlashLoanExample is FlashLoanReceiverBase, Withdraw {
       safeTransferWithApprove(amountIn, address(swapRouter));
       ISwapRouter.ExactInputSingleParams memory params = ISwapRouter
           .ExactInputSingleParams({
-              tokenIn: DAI,
+              tokenIn: DAI,  
               tokenOut: WETH,
               fee: 3000,
               recipient: msg.sender,
@@ -118,16 +118,28 @@ contract FlashLoanExample is FlashLoanReceiverBase, Withdraw {
     //aave function to deposit
     depositCollateral(assets[0], amounts[0]);
 
+    uint256 USDCAmount = 500000;
+    uint256 DAIAmount = 1000000000000000000;
     //aave function to borrow new asset
-   // borrowCollateral(WETH, amounts[0]/2);
-   // repayCollateral(WETH, amounts[0]/2);
-    withdrawCollateral(assets[0], amounts[0]);
+    //borrowCollateral(WETH, USDCAmount);
+    //repayCollateral(WETH, USDCAmount);
+    //try reverse
+    borrowCollateral(DAI, DAIAmount);
+    depositCollateral(DAI, DAIAmount);
+    borrowCollateral(WETH, USDCAmount);
+    
+
+   // withdrawCollateral(assets[0], amounts[0]);
 
     //UNISWAP STUFF
     //swap Dai to usdc
     swapExactInputSingle(amounts[0]);
     //Swap USDC to Dai
   //  swapExactInputSingleOut(IERC20(WETH).balanceOf(address(this)));  // current error
+  //  swapExactInputSingleOut(amounts[0]);
+
+    //repay the loan:
+    repayCollateral(DAI, DAIAmount);
 
   
 
