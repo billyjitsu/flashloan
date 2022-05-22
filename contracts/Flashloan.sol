@@ -40,6 +40,7 @@ contract FlashLoanExample is FlashLoanReceiverBase, Withdraw {
   uint256 private constant ADDRESSES_PROVIDER_ID = uint256(0);
  // --
 
+  uint256 constant public INTEREST_RATE_MODE = 2;
   uint256 public swappedAmount;
 
   constructor(IPoolAddressesProvider provider) public FlashLoanReceiverBase(provider) {}
@@ -120,6 +121,7 @@ contract FlashLoanExample is FlashLoanReceiverBase, Withdraw {
 
     uint256 USDCAmount = 500000;
     uint256 DAIAmount = 1000000000000000000;
+    uint256 DAIAmountR = 100000000000000000;
     //aave function to borrow new asset
     //borrowCollateral(WETH, USDCAmount);
     //repayCollateral(WETH, USDCAmount);
@@ -139,7 +141,7 @@ contract FlashLoanExample is FlashLoanReceiverBase, Withdraw {
   //  swapExactInputSingleOut(amounts[0]);
 
     //repay the loan:
-    repayCollateral(DAI, DAIAmount);
+   // repayCollateral(DAI, DAIAmountR);
 
   
 
@@ -189,11 +191,11 @@ contract FlashLoanExample is FlashLoanReceiverBase, Withdraw {
 
     function borrowCollateral(address asset, uint256 amount) public {
         IERC20(asset).approve(address(_pool()), amount);
-        _pool().borrow(asset, amount, 2, 0, address(this)); //on single tx Interest is 2
+        _pool().borrow(asset, amount, INTEREST_RATE_MODE, 0, address(this)); //on single tx Interest is 2
     }
 
     function repayCollateral(address asset, uint256 amount) public {
-        _pool().repay(asset, amount, 2, address(this));  //on single tx Interest is 2
+        _pool().repay(asset, amount, INTEREST_RATE_MODE, address(this));  //on single tx Interest is 2 (0 failing)
     }
 
     function _poolProvider() internal view returns (IPoolAddressesProvider) {
