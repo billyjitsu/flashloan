@@ -117,7 +117,10 @@ contract FlashLoanExample is FlashLoanReceiverBase, Withdraw {
     
     //Deposit the loaned assets
     //aave function to deposit
-    depositCollateral(assets[0], amounts[0]);
+    
+    //CAN'T Borrow and repay on the same tx
+    // depositCollateral(assets[0], amounts[0]);
+    repayCollateral(assets[0], amounts[0]);
 
     uint256 USDCAmount = 500000;
     uint256 DAIAmount = 1000000000000000000;
